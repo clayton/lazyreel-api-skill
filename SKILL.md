@@ -36,8 +36,8 @@ Organization -> TikTokAccount
 
 All resources use prefix IDs: `offr_*`, `camp_*`, `idea_*`, `crtv_*`, `slde_*`, `arts_*`, `tmpl_*`, `pcol_*`, `ndsc_*`, `dtkt_*`, `seed_*`, `ttak_*`, `hook_*`, `conv_*`, `diag_*`, `ctav_*`
 
-**Performance Tracking (The Larry Loop)**
-- **HookPerformance**: Tracks hook text effectiveness with LLM-classified format categories and Larry's decision statuses (testing/double_down/keep/try_variation/dropped)
+**Performance Tracking (The Lazy Loop)**
+- **HookPerformance**: Tracks hook text effectiveness with LLM-classified format categories and decision statuses (testing/double_down/keep/try_variation/dropped)
 - **ConversionEvent**: Conversion intake from external sources (RevenueCat/Stripe/custom) with timing-based attribution to creatives
 - **DiagnosticReport**: Daily quadrant analysis (scale/fix_cta/fix_hook/full_reset)
 - **CtaVariant**: CTA text tracking with conversion rates
@@ -234,7 +234,7 @@ bash ~/.claude/skills/lazyreel-api/scripts/update-seed-idea.sh --offering-id off
 bash ~/.claude/skills/lazyreel-api/scripts/delete-seed-idea.sh --offering-id offr_abc123 --campaign-id camp_def456 --id seed_ghi789
 ```
 
-**Performance Tracking (The Larry Loop)**
+**Performance Tracking (The Lazy Loop)**
 ```bash
 # Get the daily performance report (diagnostics + hooks + conversions + recommendations)
 bash ~/.claude/skills/lazyreel-api/scripts/get-daily-report.sh --offering-id offr_abc123
@@ -290,8 +290,8 @@ bash ~/.claude/skills/lazyreel-api/scripts/poll-status.sh --url "/api/v1/offerin
 ```
 </operations>
 
-<workflow_larry_loop>
-The Larry Loop -- self-improving content feedback cycle:
+<workflow_lazy_loop>
+The Lazy Loop -- self-improving content feedback cycle:
 
 1. `get-daily-report.sh` -- check today's diagnostics and recommendations
 2. Interpret the quadrant breakdown:
@@ -306,12 +306,12 @@ The Larry Loop -- self-improving content feedback cycle:
 7. `post-conversion-event.sh` -- report conversions as they come in (attribution is automatic)
 8. `list-hook-performances.sh` -- check how hooks are performing (scored daily)
 
-Hook scoring thresholds (Larry's rules):
+Hook scoring thresholds:
 - 50K+ views -> `double_down`
 - 10K-50K views -> `keep`
 - 1K-10K views -> `try_variation`
 - <1K views (used 2+ times) -> `dropped`
-</workflow_larry_loop>
+</workflow_lazy_loop>
 
 <async_operations>
 Async operations return a poll action in `next_actions`:
