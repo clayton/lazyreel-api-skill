@@ -478,8 +478,25 @@ Read-only. TikTok accounts are connected via OAuth in the web app.
 
 | Method | Path | Description |
 |--------|------|-------------|
-| GET | `/offerings/{offering_id}/photo_collections` | List photo collections |
-| GET | `/offerings/{offering_id}/photo_collections/{id}` | Get a photo collection |
+| GET | `/offerings/{oid}/photo_collections` | List photo collections |
+| GET | `/offerings/{oid}/photo_collections/{id}` | Get collection with images |
+| POST | `/offerings/{oid}/photo_collections` | Create collection |
+| POST | `/offerings/{oid}/photo_collections/{id}/upload_images` | Upload images via URL |
+| DELETE | `/offerings/{oid}/photo_collections/{id}/remove_image` | Remove image |
+
+**Create body:**
+```json
+{ "photo_collection": { "name": "My Photos", "description": "..." } }
+```
+
+**Upload images body:**
+```json
+{ "image_urls": ["https://example.com/a.jpg", "https://example.com/b.jpg"] }
+```
+
+**Remove image params:** `image_id` (integer ID of the photo_collection_image record)
+
+Prefix ID: `pcol_*`
 
 ### Reference Data
 

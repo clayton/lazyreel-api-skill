@@ -80,6 +80,19 @@ bash ~/.claude/skills/lazyreel-api/scripts/update-campaign.sh --offering-id offr
 bash ~/.claude/skills/lazyreel-api/scripts/archive-campaign.sh --offering-id offr_abc123 --id camp_def456 [--unarchive]
 ```
 
+**Campaign Text Style Configuration**
+
+Set default text styles when creating or updating a campaign. These apply to all new creatives/slides:
+
+```
+default_text_style_variant: outline | background_white | background_color | background_color_solid
+default_text_background_color: "#HEXCODE"
+default_text_background_opacity: 0.0-1.0
+default_text_layout: headline_subtext | single_block
+```
+
+Use `update-campaign.sh` to set these, or pass them when creating. Automation-specific overrides: `automation_text_style_variant`, `automation_text_background_color`, `automation_text_background_opacity`, `automation_text_layout`.
+
 **Content Ideas**
 ```bash
 # Generate ideas (async -- returns polling info)
@@ -167,6 +180,35 @@ bash ~/.claude/skills/lazyreel-api/scripts/generate-slide-image.sh --offering-id
 bash ~/.claude/skills/lazyreel-api/scripts/upload-slide-image.sh --offering-id offr_abc123 --campaign-id camp_def456 --creative-id crtv_ghi789 --id slde_jkl012 --image-url "https://..."
 bash ~/.claude/skills/lazyreel-api/scripts/upload-slide-image.sh --offering-id offr_abc123 --campaign-id camp_def456 --creative-id crtv_ghi789 --id slde_jkl012 --image-data "BASE64..." --filename "photo.jpg" --content-type "image/jpeg"
 ```
+
+**Slide Text Elements**
+
+Update slide text elements via `update-slide.sh --text-elements 'JSON_ARRAY'`. Each element:
+
+```json
+{
+  "id": "uuid",
+  "preset": "headline|subtext|caption|title|body|text",
+  "text": "Your text here",
+  "x": 11.0, "y": 20.0, "width": 78.0, "height": 15.0,
+  "fontSize": "26px",
+  "alignment": "left|center|right",
+  "style_variant": "outline|background_white|background_color|background_color_solid",
+  "background_color": "#4A5FBD",
+  "background_opacity": 0.72
+}
+```
+
+Coordinates are percentages of the 1080x1920 frame. Safe zone: x 11-89%, y 8-83%.
+
+**Post Copy / Captions**
+
+```bash
+# Generate AI post title, description, and hashtags for a creative
+bash ~/.claude/skills/lazyreel-api/scripts/generate-post-info.sh --offering-id offr_abc123 --campaign-id camp_def456 --id crtv_ghi789
+```
+
+Returns `post_title`, `post_description`, `post_hashtags` on the creative. These fields are also included in every creative GET response. To regenerate, clear the fields first via `update-creative.sh --post-title "" --post-description "" --post-hashtags ""`.
 
 **Niche Discoveries**
 ```bash
@@ -261,14 +303,14 @@ bash ~/.claude/skills/lazyreel-api/scripts/list-tiktok-accounts.sh
 bash ~/.claude/skills/lazyreel-api/scripts/get-tiktok-account.sh --id ttak_abc123
 ```
 
-**Photo Collections (read-only)**
+**Photo Collections**
 ```bash
-# No dedicated script yet -- use direct API calls:
-# GET /offerings/{offering_id}/photo_collections
-# GET /offerings/{offering_id}/photo_collections/{id}
-# Example:
+# List photo collections
 source ~/.claude/.env && /usr/bin/curl -s -H "Authorization: Bearer $LAZYREEL_API_TOKEN" \
   "https://lazyreel.com/api/v1/offerings/offr_abc123/photo_collections" | jq .
+
+# Upload images to a collection (via URL -- server fetches them)
+bash ~/.claude/skills/lazyreel-api/scripts/upload-collection-images.sh --offering-id offr_abc123 --collection-id pcol_def456 --image-urls "https://example.com/a.jpg,https://example.com/b.jpg"
 ```
 
 **Reference Data (read-only)**
