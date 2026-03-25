@@ -40,7 +40,7 @@ echo "$response" | jq -r '
   "Campaigns (page \(.meta.current_page // 1) of \(.meta.total_pages // 1), \(.meta.total_count // 0) total)\n",
   (["ID", "Name", "Status", "Goal", "Archived"],
    ["--", "----", "------", "----", "--------"],
-   (.data[] |
+   (.result[] |
      [
        .id,
        (.name // "-" | if length > 40 then .[:40] + "..." else . end),

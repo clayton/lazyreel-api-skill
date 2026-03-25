@@ -40,7 +40,7 @@ echo "$response" | jq -r '
   "Content Ideas (page \(.meta.current_page // 1) of \(.meta.total_pages // 1), \(.meta.total_count // 0) total)\n",
   (["ID", "Title", "Status", "Hook", "Rejected"],
    ["--", "-----", "------", "----", "--------"],
-   (.data[] |
+   (.result[] |
      [
        .id,
        (.title // "-" | if length > 45 then .[:45] + "..." else . end),

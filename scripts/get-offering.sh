@@ -23,4 +23,4 @@ if ! response=$(api_get "/offerings/${ID}"); then
   exit 1
 fi
 
-echo "$response" | jq '.data'
+echo "$response" | jq '.result'

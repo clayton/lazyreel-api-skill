@@ -24,7 +24,7 @@ echo "$response" | jq -r '
   "Creative Templates (page \(.meta.current_page // 1) of \(.meta.total_pages // 1), \(.meta.total_count // 0) total)\n",
   (["ID", "Name", "Type", "Purpose", "Active", "Auto"],
    ["--", "----", "----", "-------", "------", "----"],
-   (.data[] |
+   (.result[] |
      [
        .id,
        (.name // "-" | if length > 30 then .[:30] + "..." else . end),

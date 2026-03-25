@@ -30,7 +30,7 @@ fi
 echo "$response" | jq -r '
   (["ID", "Pos", "Type", "Duration", "Hidden", "Has Image"],
    ["--", "---", "----", "--------", "------", "---------"],
-   (.data[] |
+   (.result[] |
      [
        .id,
        (.position | tostring),

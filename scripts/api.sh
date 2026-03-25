@@ -30,21 +30,29 @@ load_env() {
   fi
 }
 
-# Check API response for errors
+# Check API response for errors (supports agent-first envelope: ok/result/next_actions)
 check_error() {
   local response="$1"
-  local error_msg=""
-  if echo "$response" | jq -e '.error // empty' &>/dev/null 2>&1; then
-    error_msg=$(echo "$response" | jq -r '.error.message // .error')
-  fi
-  if [[ -n "$error_msg" ]]; then
+  # Check for ok: false (agent-first envelope)
+  local ok
+  ok=$(echo "$response" | jq -r '.ok // true' 2>/dev/null) || ok="true"
+  if [[ "$ok" == "false" ]]; then
     local code
     code=$(echo "$response" | jq -r '.error.code // "unknown"' 2>/dev/null) || code="unknown"
+    local error_msg
+    error_msg=$(echo "$response" | jq -r '.error.message // "Unknown error"' 2>/dev/null)
     echo "API Error [$code]: $error_msg" >&2
     local details
     details=$(echo "$response" | jq -r '.error.details // empty' 2>/dev/null) || true
     if [[ -n "$details" ]]; then
       echo "Details: $details" >&2
+    fi
+    # Show recovery suggestions from next_actions
+    local actions
+    actions=$(echo "$response" | jq -r '.next_actions[]? | "  -> \(.method) \(.url) — \(.description)"' 2>/dev/null) || true
+    if [[ -n "$actions" ]]; then
+      echo "Suggested next actions:" >&2
+      echo "$actions" >&2
     fi
     return 1
   fi
@@ -103,6 +111,22 @@ api_patch() {
     -H "Content-Type: application/json" \
     -d "$body" "$url") || {
     echo "Error: API PATCH failed for $path" >&2
+    return 1
+  }
+  check_error "$response" || return 1
+  echo "$response"
+}
+
+# DELETE request
+api_delete() {
+  local path="$1"
+  local url="${LAZYREEL_API_BASE}${path}"
+  local response
+  response=$(curl -sf -X DELETE \
+    -H "Authorization: Bearer $LAZYREEL_API_TOKEN" \
+    -H "Content-Type: application/json" \
+    "$url") || {
+    echo "Error: API DELETE failed for $path" >&2
     return 1
   }
   check_error "$response" || return 1

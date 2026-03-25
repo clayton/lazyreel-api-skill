@@ -29,4 +29,4 @@ if ! response=$(api_post "/offerings/${OFFERING_ID}/campaigns/${CAMPAIGN_ID}/con
   exit 1
 fi
 
-echo "$response" | jq '.data'
+echo "$response" | jq '.result'

@@ -63,4 +63,4 @@ if ! response=$(api_patch "/offerings/${OFFERING_ID}/campaigns/${ID}" "$BODY"); 
   exit 1
 fi
 
-echo "$response" | jq '.data'
+echo "$response" | jq '.result'

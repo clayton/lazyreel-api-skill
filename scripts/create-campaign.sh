@@ -54,4 +54,4 @@ if ! response=$(api_post "/offerings/${OFFERING_ID}/campaigns" "$BODY"); then
   exit 1
 fi
 
-echo "$response" | jq '.data'
+echo "$response" | jq '.result'

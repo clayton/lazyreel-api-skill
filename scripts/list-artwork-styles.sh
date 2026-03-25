@@ -24,7 +24,7 @@ echo "$response" | jq -r '
   "Artwork Styles (page \(.meta.current_page // 1) of \(.meta.total_pages // 1), \(.meta.total_count // 0) total)\n",
   (["ID", "Name", "Keywords", "Active", "Default", "Global"],
    ["--", "----", "--------", "------", "-------", "------"],
-   (.data[] |
+   (.result[] |
      [
        .id,
        (.name // "-" | if length > 25 then .[:25] + "..." else . end),

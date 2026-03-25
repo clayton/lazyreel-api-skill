@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 # Poll an async operation until it reaches a terminal state
-# Usage: bash poll-status.sh --url "/api/v1/offerings/offr_.../creatives/crtv_..." --field "data.status" --done "completed,failed" [--interval 3] [--max-polls 60]
+# Usage: bash poll-status.sh --url "/api/v1/offerings/offr_.../creatives/crtv_..." --field "result.status" --done "completed,failed" [--interval 3] [--max-polls 60]
 
 source "$(dirname "$0")/api.sh"
 
 POLL_PATH=""
-STATUS_FIELD="data.status"
+STATUS_FIELD="result.status"
 TERMINAL_STATES="completed,failed"
 INTERVAL=3
 MAX_POLLS=60
@@ -49,7 +49,7 @@ while [[ $poll_count -lt $MAX_POLLS ]]; do
   for state in "${STATES[@]}"; do
     if [[ "$current_status" == "$state" ]]; then
       echo ""
-      echo "$response" | jq '.data'
+      echo "$response" | jq '.result'
       exit 0
     fi
   done

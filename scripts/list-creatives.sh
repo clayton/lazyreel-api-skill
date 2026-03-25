@@ -40,7 +40,7 @@ echo "$response" | jq -r '
   "Creatives (page \(.meta.current_page // 1) of \(.meta.total_pages // 1), \(.meta.total_count // 0) total)\n",
   (["ID", "Name", "Status", "Video", "Slides"],
    ["--", "----", "------", "-----", "------"],
-   (.data[] |
+   (.result[] |
      [
        .id,
        (.name // "-" | if length > 35 then .[:35] + "..." else . end),
