@@ -9,6 +9,7 @@ LAZYREEL_API_BASE="https://lazyreel.com/api/v1"
 # Load environment variables from .env files
 load_env() {
   local env_files=(
+    "$HOME/.codex/.env"
     "$HOME/.claude/.env"
     "$HOME/.env"
     ".env"
@@ -24,7 +25,7 @@ load_env() {
 
   if [[ -z "${LAZYREEL_API_TOKEN:-}" ]]; then
     echo "Error: LAZYREEL_API_TOKEN not set." >&2
-    echo "Add it to ~/.claude/.env" >&2
+    echo "Add it to ~/.codex/.env, ~/.claude/.env, ~/.env, or this project's .env file." >&2
     echo "Tokens can be created in LazyReel under Settings > API Tokens." >&2
     exit 1
   fi

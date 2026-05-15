@@ -1,0 +1,4 @@
+interface:
+  display_name: "LazyReel API"
+  short_description: "Manage LazyReel campaigns and creatives"
+  default_prompt: "Use $lazyreel-api to list my LazyReel offerings."

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Update a campaign
-# Usage: bash update-campaign.sh --offering-id offr_abc123 --id camp_def456 [--name "..."] [--status draft|active|paused] [--goal ...] [--brief "..."]
+# Usage: bash update-campaign.sh --offering-id offr_abc123 --id camp_def456 [--name "..."] [--status draft|active|paused] [--goal ...] [--brief "..."] [--campaign-type audience_building|app_promotion] [--app-plug-context "..."] [--automation-template-ids "tmpl_a,tmpl_b"]
 
 source "$(dirname "$0")/api.sh"
 
@@ -13,6 +13,9 @@ GOAL=""
 BRIEF=""
 TEMPLATE_ID=""
 STYLE_IDS=""
+CAMPAIGN_TYPE=""
+APP_PLUG_CONTEXT=""
+AUTOMATION_TEMPLATE_IDS=""
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
@@ -25,6 +28,9 @@ while [[ $# -gt 0 ]]; do
     --brief) BRIEF="$2"; shift 2 ;;
     --template-id) TEMPLATE_ID="$2"; shift 2 ;;
     --style-ids) STYLE_IDS="$2"; shift 2 ;;
+    --campaign-type) CAMPAIGN_TYPE="$2"; shift 2 ;;
+    --app-plug-context) APP_PLUG_CONTEXT="$2"; shift 2 ;;
+    --automation-template-ids) AUTOMATION_TEMPLATE_IDS="$2"; shift 2 ;;
     *) echo "Unknown option: $1" >&2; exit 1 ;;
   esac
 done
@@ -56,6 +62,15 @@ if [[ -n "$TEMPLATE_ID" ]]; then
 fi
 if [[ -n "$STYLE_IDS" ]]; then
   BODY=$(echo "$BODY" | jq --arg v "$STYLE_IDS" '.campaign.artwork_style_ids = ($v | split(","))')
+fi
+if [[ -n "$CAMPAIGN_TYPE" ]]; then
+  BODY=$(echo "$BODY" | jq --arg v "$CAMPAIGN_TYPE" '.campaign.campaign_type = $v')
+fi
+if [[ -n "$APP_PLUG_CONTEXT" ]]; then
+  BODY=$(echo "$BODY" | jq --arg v "$APP_PLUG_CONTEXT" '.campaign.app_plug_context = $v')
+fi
+if [[ -n "$AUTOMATION_TEMPLATE_IDS" ]]; then
+  BODY=$(echo "$BODY" | jq --arg v "$AUTOMATION_TEMPLATE_IDS" '.campaign.automation_template_ids = ($v | split(","))')
 fi
 
 response=""
